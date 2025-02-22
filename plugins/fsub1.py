@@ -6,15 +6,16 @@ from bot import Bot
 
 @Bot.on_message(filters.command("fsub1") & filters.user(config.OWNER_ID))
 async def set_force_sub_channel1(client, message: Message):
-    await message.reply_text("Send the new value for FORCE_SUB_CHANNEL1")
-
-@Bot.on_message(filters.text & filters.reply & filters.user(config.OWNER_ID))
-async def receive_new_force_sub_channel1(client, message: Message):
-    if message.reply_to_message and message.reply_to_message.text == "Send the new value for FORCE_SUB_CHANNEL1":
-        new_value = message.text.strip()
-        config.FORCE_SUB_CHANNEL1 = int(new_value)
-        reload_config()
-        await message.reply_text(f"FORCE_SUB_CHANNEL1 updated to {new_value}")
+    # Extract the new value from the command
+    try:
+        new_value = int(message.command[1])
+    except (IndexError, ValueError):
+        await message.reply_text("Please provide a valid new value for FORCE_SUB_CHANNEL1.")
+        return
+    
+    config.FORCE_SUB_CHANNEL1 = new_value
+    reload_config()
+    await message.reply_text(f"FORCE_SUB_CHANNEL1 updated to {new_value}")
 
 def reload_config():
     importlib.reload(config)
