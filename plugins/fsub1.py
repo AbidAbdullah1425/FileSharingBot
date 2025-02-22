@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 import importlib
+import os
 import config
 from bot import Bot
 
@@ -12,9 +13,13 @@ async def set_force_sub_channel1(client, message: Message):
     except (IndexError, ValueError):
         await message.reply_text("Please provide a valid new value for FORCE_SUB_CHANNEL1.")
         return
+
+    # Update the environment variable
+    os.environ["FORCE_SUB_CHANNEL1"] = str(new_value)
     
-    config.FORCE_SUB_CHANNEL1 = new_value
+    # Reload the config to reflect the change
     reload_config()
+    
     await message.reply_text(f"FORCE_SUB_CHANNEL1 updated to {new_value}")
 
 def reload_config():
