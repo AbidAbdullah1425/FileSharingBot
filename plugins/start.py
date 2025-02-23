@@ -145,6 +145,7 @@ async def start_command(client: Client, message: Message):
             reply_markup=reply_markup
         )
         return
+    await wait_msg.delete()
 
 
 
