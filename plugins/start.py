@@ -25,6 +25,9 @@ TUT_VID = f"{TUT_VID}"
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
+# Send the "WAIT A Moment" message
+    wait_msg = await message.reply("𒊹︎︎︎ ᴡᴀɪᴛ ᴀ ᴍᴏᴍᴇɴᴛ •")
+
     id = message.from_user.id
     if not await present_user(id):
         try:
@@ -195,6 +198,9 @@ async def start_command(client: Client, message: Message):
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
+# Send the "WAIT A Moment" message
+    wait_msg = await message.reply("⚠︎ ᴄʜᴇᴄᴋɪɴɢ sᴜʙsᴄʀɪʙᴛɪᴏɴ •")
+
     # Generate invite links using the function from Invite_links.py
     await export_invite_links(client)
 
