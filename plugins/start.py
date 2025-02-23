@@ -211,6 +211,10 @@ async def start_command(client: Client, message: Message):
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
     wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
+
+    # Generate invite links using the function from Invite_links.py
+    await export_invite_links(client)
+
     # Initialize buttons list
     buttons = []
 
