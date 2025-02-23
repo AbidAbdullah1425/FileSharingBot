@@ -33,6 +33,8 @@ async def start_command(client: Client, message: Message):
     # Send the "WAIT A Moment" message
     wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
 
+    reload_config():
+
     id = message.from_user.id
     if not await present_user(id):
         try:
