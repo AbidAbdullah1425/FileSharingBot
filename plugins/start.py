@@ -165,6 +165,19 @@ async def start_command(client: Client, message: Message):
             try:
                 reload_url = (
                     f"https://t.me/{client.username}?start={message.command[1]}"
+
+
+@Bot.on_callback_query()
+async def cb_handler(client: Bot, query: CallbackQuery):
+    data = query.data
+    if data == "close":
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
+
+
                     if message.command and len(message.command) > 1
                     else None
                 )
@@ -182,15 +195,7 @@ async def start_command(client: Client, message: Message):
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
 
-@Bot.on_callback_query()
-async def cb_handler(client: Bot, query: CallbackQuery):
-    data = query.data
-    if data == "close":
-        await query.message.delete()
-        try:
-            await query.message.reply_to_message.delete()
-        except:
-            pass
+
 
     else:
         reply_markup = InlineKeyboardMarkup(
