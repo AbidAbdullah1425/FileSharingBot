@@ -1,5 +1,5 @@
 from pyrogram import Client
-from config import LOGGER
+from config import LOGGER, FORCE_SUB_CHANNEL1, FORCE_SUB_CHANNEL2, FORCE_SUB_CHANNEL3, FORCE_SUB_CHANNEL4
 import config
 
 async def export_invite_links(client: Client):
