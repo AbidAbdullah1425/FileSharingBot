@@ -84,7 +84,7 @@ async def start_command(client: Client, message: Message):
                 ]
                 await wait_msg.delete()
                 return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one allows you to access the bot's features.\n\nHow to refresh your token?\n\nClick the 'OPEN LINK' button below and follow the instructions.</b>",
+                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one a[...]",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
@@ -154,41 +154,39 @@ async def start_command(client: Client, message: Message):
                 print(f"Failed to send message: {e}")
                 pass
 
+        if FILE_AUTO_DELETE > 0:
+            notification_msg = await message.reply(
+                f"<b><blockquote>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</blockquote></b>"
+            )
 
-if FILE_AUTO_DELETE > 0:
-    notification_msg = await message.reply(
-        f"<b><blockquote>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</blockquote></b>"
-    )
+            await asyncio.sleep(FILE_AUTO_DELETE)
 
-    await asyncio.sleep(FILE_AUTO_DELETE)
+            for snt_msg in codeflix_msgs:    
+                if snt_msg:
+                    try:    
+                        await snt_msg.delete()  
+                    except Exception as e:
+                        print(f"Error deleting message {snt_msg.id}: {e}")
 
-    for snt_msg in codeflix_msgs:    
-        if snt_msg:
-            try:    
-                await snt_msg.delete()  
+            try:
+                reload_url = (
+                    f"https://t.me/{client.username}?start={message.command[1]}"
+                    if message.command and len(message.command) > 1
+                    else None
+                )
+                keyboard = InlineKeyboardMarkup(
+                    [
+                        [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)],
+                        [InlineKeyboardButton(" ᴄʟᴏsᴇ •", callback_data="close")]
+                    ]
+                ) if reload_url else None
+
+                await notification_msg.edit(
+                    "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=\"{reload_url}\">ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ</a></blockquote></b>",
+                    reply_markup=keyboard
+                )
             except Exception as e:
-                print(f"Error deleting message {snt_msg.id}: {e}")
-
-    try:
-        reload_url = (
-            f"https://t.me/{client.username}?start={message.command[1]}"
-            if message.command and len(message.command) > 1
-            else None
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)],
-                [InlineKeyboardButton(" ᴄʟᴏsᴇ •", callback_data="close")]
-            ]
-        ) if reload_url else None
-
-        await notification_msg.edit(
-            "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=\"{reload_url}\">ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ</a></blockquote></b>",
-            reply_markup=keyboard
-        )
-    except Exception as e:
-        print(f"Error updating notification with 'Get File Again' button: {e}")
-
+                print(f"Error updating notification with 'Get File Again' button: {e}")
 
 @Bot.on_callback_query()
 async def cb_handler(client: Bot, query: CallbackQuery):
@@ -222,7 +220,6 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         )
 
     await wait_msg.delete()
-
 
 #=====================================================================================##
 # Don't Remove Credit @CodeFlix_Bots, @rohit_1888
