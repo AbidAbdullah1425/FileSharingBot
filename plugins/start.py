@@ -169,7 +169,7 @@ async def start_command(client: Client, message: Message):
                     else None
                 )
                 keyboard = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)]]
+                    [[InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url), InlineKeyboardButton("ᴄʟᴏsᴇ •", callback_data="close")]]
                 ) if reload_url else None
 
                 await notification_msg.edit(
