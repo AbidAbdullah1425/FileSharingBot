@@ -32,11 +32,22 @@ DB_NAME = os.environ.get("DATABASE_NAME", "Cluster0")
 #Time in seconds for message delete, put 0 to never delete
 TIME = int(os.environ.get("TIME", "10"))
 
-FORCE_SUB_CHANNEL1 = int(os.environ.get("FORCE_SUB_CHANNEL1", "-1002386614375"))
-#put 0 to disable
-FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1002355785538"))#put 0 to disable
-FORCE_SUB_CHANNEL3 = int(os.environ.get("FORCE_SUB_CHANNEL3", "0"))#put 0 to disable
-FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "0"))#put 0 to disable
+from pymongo import MongoClient
+import os
+
+client = MongoClient(DB_URL)
+db = client[DB_NAME]
+collection = db['force_sub_channels']
+
+async def load_settings():
+    for i in range(1, 5):
+        setting = await collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
+        os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
+
+FORCE_SUB_CHANNEL1 = int(os.getenv("FORCE_SUB_CHANNEL1", "0"))
+FORCE_SUB_CHANNEL2 = int(os.getenv("FORCE_SUB_CHANNEL2", "0"))
+FORCE_SUB_CHANNEL3 = int(os.getenv("FORCE_SUB_CHANNEL3", "0"))
+FORCE_SUB_CHANNEL4 = int(os.getenv("FORCE_SUB_CHANNEL4", "0"))
 
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
