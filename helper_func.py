@@ -16,7 +16,7 @@ def reload_config():
     importlib.reload(config)
 
 async def is_subscribed1(filter, client, update):
-    #reload_config()
+    reload_config()
     if not config.FORCE_SUB_CHANNEL1:
         return True
     user_id = update.from_user.id
