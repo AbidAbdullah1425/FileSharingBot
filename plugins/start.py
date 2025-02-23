@@ -7,6 +7,7 @@ import random
 import sys
 import time
 import string
+import string as rohit
 import humanize
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode
@@ -15,10 +16,8 @@ from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
 from bot import Bot
 from config import *
-import config
 from helper_func import *
 from database.database import *
-from plugins.Invite_links import export_invite_links
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
@@ -36,9 +35,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
-    # Send the "WAIT A Moment" message
     wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
-
     id = message.from_user.id
     if not await present_user(id):
         try:
@@ -65,12 +62,10 @@ async def start_command(client: Client, message: Message):
             if "verify_" in message.text:
                 _, token = message.text.split("_", 1)
                 if verify_status['verify_token'] != token:
-                    await wait_msg.delete()
                     return await message.reply("Your token is invalid or expired. Try again by clicking /start.")
                 await update_verify_status(id, is_verified=True, verified_time=time.time())
                 if verify_status["link"] == "":
                     reply_markup = None
-                await wait_msg.delete()
                 return await message.reply(
                     f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
                     reply_markup=reply_markup,
@@ -79,7 +74,7 @@ async def start_command(client: Client, message: Message):
                 )
 
             if not verify_status['is_verified']:
-                token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+                token = ''.join(random.choices(rohit.ascii_letters + rohit.digits, k=10))
                 await update_verify_status(id, verify_token=token, link="")
                 link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
                 btn = [
@@ -88,7 +83,7 @@ async def start_command(client: Client, message: Message):
                 ]
                 await wait_msg.delete()
                 return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one a[...]",
+                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad allows you to use the bot for {get_exp_time(VERIFY_EXPIRE)}</b>",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
@@ -100,7 +95,6 @@ async def start_command(client: Client, message: Message):
         try:
             base64_string = text.split(" ", 1)[1]
         except IndexError:
-            await wait_msg.delete()
             return
 
         string = await decode(base64_string)
@@ -114,7 +108,6 @@ async def start_command(client: Client, message: Message):
                 ids = range(start, end + 1) if start <= end else list(range(start, end - 1, -1))
             except Exception as e:
                 print(f"Error decoding IDs: {e}")
-                await wait_msg.delete()
                 return
 
         elif len(argument) == 2:
@@ -122,7 +115,6 @@ async def start_command(client: Client, message: Message):
                 ids = [int(int(argument[1]) / abs(client.db_channel.id))]
             except Exception as e:
                 print(f"Error decoding ID: {e}")
-                await wait_msg.delete()
                 return
 
         temp_msg = await message.reply("Please wait...")
@@ -131,8 +123,6 @@ async def start_command(client: Client, message: Message):
         except Exception as e:
             await message.reply_text("Something went wrong!")
             print(f"Error getting messages: {e}")
-            await temp_msg.delete()
-            await wait_msg.delete()
             return
         finally:
             await temp_msg.delete()
@@ -165,10 +155,10 @@ async def start_command(client: Client, message: Message):
 
             await asyncio.sleep(FILE_AUTO_DELETE)
 
-            for snt_msg in codeflix_msgs:
+            for snt_msg in codeflix_msgs:    
                 if snt_msg:
-                    try:
-                        await snt_msg.delete()
+                    try:    
+                        await snt_msg.delete()  
                     except Exception as e:
                         print(f"Error deleting message {snt_msg.id}: {e}")
 
@@ -179,25 +169,22 @@ async def start_command(client: Client, message: Message):
                     else None
                 )
                 keyboard = InlineKeyboardMarkup(
-                    [
-                [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url), InlineKeyboardButton("ᴄʟᴏsᴇ •", callback_data="close")]
-            ]
+                    [[InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)]]
                 ) if reload_url else None
 
-                new_content = "<b><blockquote>›› Pʀᴇᴠɪᴏᴜs Mᴇssᴀɢᴇ ᴡᴀs Dᴇʟᴇᴛᴇᴅ\n\nIғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɢᴇᴛ ᴛʜᴇ ғɪʟᴇs ᴀɢᴀɪɴ, ᴛʜᴇɴ ᴄʟɪᴄᴋ: <a href=\"{reload_url}\">ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ</a> ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴇʟsᴇ ᴄʟᴏsᴇ ᴛʜɪs ᴍᴇssᴀɢᴇ.</blockquote></b>"
-                if notification_msg.text != new_content:
-                    await notification_msg.edit(new_content, reply_markup=keyboard)
+                await notification_msg.edit(
+                    "<b><blockquote>›› Pʀᴇᴠɪᴏᴜs Mᴇssᴀɢᴇ ᴡᴀs Dᴇʟᴇᴛᴇᴅ !!\n\nIғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɢᴇᴛ ᴛʜᴇ ғɪʟᴇs ᴀɢᴀɪɴ, ᴛʜᴇɴ ᴄʟɪᴄᴋ: <a href=\"{reload_url}\">• ɢᴇᴛ ғɪʟᴇs •</a> ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴇʟsᴇ ᴄʟᴏsᴇ ᴛʜɪs ᴍᴇssᴀɢᴇ.</blockquote></b>",
+                    reply_markup=keyboard
+                )
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
-
     else:
         reply_markup = InlineKeyboardMarkup(
             [
-
-    [
+        [
                     InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data = "about")     
 
-    ]
+        ]
             ]
         )
         await message.reply_photo(
@@ -212,8 +199,9 @@ async def start_command(client: Client, message: Message):
             reply_markup=reply_markup#,
             #message_effect_id=5104841245755180586  # 🔥
         )
-
     await wait_msg.delete()
+
+
 
 #=====================================================================================##
 # Don't Remove Credit @CodeFlix_Bots, @rohit_1888
@@ -221,12 +209,7 @@ async def start_command(client: Client, message: Message):
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
-    # Send the "WAIT A Moment" message
-    wait_msg = await message.reply("› › ᴄʜᴇᴄᴋɪɴɢ ᴍᴇᴍʙᴇʀsʜɪᴘ...")
-
-    # Generate invite links using the function from Invite_links.py
-    await export_invite_links(client)
-
+    wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
     # Initialize buttons list
     buttons = []
 
@@ -278,16 +261,17 @@ async def not_joined(client: Client, message: Message):
     await message.reply_photo(
         photo=FORCE_PIC,
         caption=FORCE_MSG.format(
-            first=message.from_user.first_name,
-            last=message.from_user.last_name,
-            username=None if not message.from_user.username else '@' + message.from_user.username,
-            mention=message.from_user.mention,
-            id=message.from_user.id
-        ),
-        reply_markup=InlineKeyboardMarkup(buttons)
-    )
-
+        first=message.from_user.first_name,
+        last=message.from_user.last_name,
+        username=None if not message.from_user.username else '@' + message.from_user.username,
+        mention=message.from_user.mention,
+        id=message.from_user.id
+    ),
+    reply_markup=InlineKeyboardMarkup(buttons)#,
+    #message_effect_id=5104841245755180586  # Add the effect ID here
+)
     await wait_msg.delete()
+
 
 #=====================================================================================##
 
@@ -296,6 +280,7 @@ WAIT_MSG = "<b>ᴡᴏʀᴋɪɴɢ....</b>"
 REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
 
 #=====================================================================================##
+
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
@@ -335,6 +320,7 @@ async def send_text(client: Bot, message: Message):
             total += 1
 
         status = f"""<b><u>ʙʀᴏᴀᴅᴄᴀꜱᴛ...</u>
+
 Total Users: <code>{total}</code>
 Successful: <code>{successful}</code>
 Blocked Users: <code>{blocked}</code>
