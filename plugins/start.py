@@ -160,39 +160,36 @@ async def start_command(client: Client, message: Message):
 
         if FILE_AUTO_DELETE > 0:
             notification_msg = await message.reply(
-        f"<b><blockquote>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</blockquote></b>"
-    )
-
-    await asyncio.sleep(FILE_AUTO_DELETE)
-
-    for snt_msg in codeflix_msgs:
-        if snt_msg:
-            try:
-                await snt_msg.delete()
-            except Exception as e:
-                print(f"Error deleting message {snt_msg.id}: {e}")
-
-    try:
-        reload_url = (
-            f"https://t.me/{client.username}?start={message.command[1]}"
-            if message.command and len(message.command) > 1
-            else None
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)],
-                [InlineKeyboardButton(" ᴄʟᴏsᴇ •", callback_data="close")]
-            ]
-        ) if reload_url else None
-
-        new_content = "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=[...]</blockquote></b>"
-        if notification_msg.text != new_content:
-            await notification_msg.edit(
-                new_content,
-                reply_markup=keyboard
+                f"<b><blockquote>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</blockquote></b>"
             )
-    except Exception as e:
-        print(f"Error updating notification with 'Get File Again' button: {e}")
+
+            await asyncio.sleep(FILE_AUTO_DELETE)
+
+            for snt_msg in codeflix_msgs:
+                if snt_msg:
+                    try:
+                        await snt_msg.delete()
+                    except Exception as e:
+                        print(f"Error deleting message {snt_msg.id}: {e}")
+
+            try:
+                reload_url = (
+                    f"https://t.me/{client.username}?start={message.command[1]}"
+                    if message.command and len(message.command) > 1
+                    else None
+                )
+                keyboard = InlineKeyboardMarkup(
+                    [
+                        [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)],
+                        [InlineKeyboardButton(" ᴄʟᴏsᴇ •", callback_data="close")]
+                    ]
+                ) if reload_url else None
+
+                new_content = "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=[...]</blockquote></b>"
+                if notification_msg.text != new_content:
+                    await notification_msg.edit(new_content, reply_markup=keyboard)
+            except Exception as e:
+                print(f"Error updating notification with 'Get File Again' button: {e}")
 
     else:
         reply_markup = InlineKeyboardMarkup(
