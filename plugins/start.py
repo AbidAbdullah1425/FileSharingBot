@@ -35,7 +35,6 @@ async def cb_handler(client: Bot, query: CallbackQuery):
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
-    wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
     id = message.from_user.id
     if not await present_user(id):
         try:
@@ -81,14 +80,14 @@ async def start_command(client: Client, message: Message):
                     [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)],
                     [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
                 ]
-                await wait_msg.delete()
+                
                 return await message.reply(
                     f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad allows you to use the bot for {get_exp_time(VERIFY_EXPIRE)}</b>",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
                 )
-    await wait_msg.delete()
+    
 
     # Handle normal message flow
     text = message.text
