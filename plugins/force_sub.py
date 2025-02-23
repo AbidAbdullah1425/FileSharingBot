@@ -25,10 +25,56 @@ async def set_force_sub_channel1(client, message: Message):
 def reload_config():
     importlib.reload(config)
 
+@Bot.on_message(filters.command("fsub2") & filters.user(config.OWNER_ID))
+async def set_force_sub_channel2(client, message: Message):
+    # Extract the new value from the command
+    try:
+        new_value = int(message.command[1])
+    except (IndexError, ValueError):
+        await message.reply_text("Please provide a valid new value for FORCE_SUB_CHANNEL2.")
+        return
 
+    # Update the environment variable
+    os.environ["FORCE_SUB_CHANNEL2"] = str(new_value)
+    
+    # Reload the config to reflect the change
+    reload_config()
+    
+    await message.reply_text(f"FORCE_SUB_CHANNEL2 updated to {new_value}")
 
+@Bot.on_message(filters.command("fsub3") & filters.user(config.OWNER_ID))
+async def set_force_sub_channel3(client, message: Message):
+    # Extract the new value from the command
+    try:
+        new_value = int(message.command[1])
+    except (IndexError, ValueError):
+        await message.reply_text("Please provide a valid new value for FORCE_SUB_CHANNEL3.")
+        return
 
+    # Update the environment variable
+    os.environ["FORCE_SUB_CHANNEL3"] = str(new_value)
+    
+    # Reload the config to reflect the change
+    reload_config()
+    
+    await message.reply_text(f"FORCE_SUB_CHANNEL3 updated to {new_value}")
 
+@Bot.on_message(filters.command("fsub4") & filters.user(config.OWNER_ID))
+async def set_force_sub_channel4(client, message: Message):
+    # Extract the new value from the command
+    try:
+        new_value = int(message.command[1])
+    except (IndexError, ValueError):
+        await message.reply_text("Please provide a valid new value for FORCE_SUB_CHANNEL4.")
+        return
+
+    # Update the environment variable
+    os.environ["FORCE_SUB_CHANNEL4"] = str(new_value)
+    
+    # Reload the config to reflect the change
+    reload_config()
+    
+    await message.reply_text(f"FORCE_SUB_CHANNEL4 updated to {new_value}")
 
 @Bot.on_message(filters.command("show_fsubs") & filters.user(config.OWNER_ID))
 async def show_fsubs(client, message: Message):
@@ -44,5 +90,3 @@ async def show_fsubs(client, message: Message):
     )
     
     await message.reply_text(fsub_values)
-
-
