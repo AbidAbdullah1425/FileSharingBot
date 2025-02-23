@@ -30,13 +30,29 @@ DB_NAME = os.environ.get("DATABASE_NAME", "Cluster0")
 #Time in seconds for message delete, put 0 to never delete
 TIME = int(os.environ.get("TIME", "1800"))
 
+# Connect to MongoDB
+client = MongoClient(config.DB_URI)
+db = client[config.DB_NAME]
+collection = db["force_sub_channels"]
 
-#force sub channel id, if you want enable force sub
-FORCE_SUB_CHANNEL1 = int(os.environ.get("FORCE_SUB_CHANNEL1", "-1002386614375"))
-#put 0 to disable
-FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1002355785538"))#put 0 to disable
-FORCE_SUB_CHANNEL3 = int(os.environ.get("FORCE_SUB_CHANNEL3", "-1002315395252"))#put 0 to disable
-FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "-1002345564361"))#put 0 to disable
+
+def fetch_force_sub_channel(channel_number, default_value):
+    """Fetch force sub-channel ID from MongoDB or fallback to default."""
+    data = collection.find_one({'_id': f"FORCE_SUB_CHANNEL{channel_number}"})
+    return data["value"] if data else default_value
+
+# Fetch values from MongoDB and update environment variables
+os.environ["FORCE_SUB_CHANNEL1"] = str(fetch_force_sub_channel(1, "-1002386614375"))
+os.environ["FORCE_SUB_CHANNEL2"] = str(fetch_force_sub_channel(2, "-1002355785538"))
+os.environ["FORCE_SUB_CHANNEL3"] = str(fetch_force_sub_channel(3, "-1002315395252"))
+os.environ["FORCE_SUB_CHANNEL4"] = str(fetch_force_sub_channel(4, "-1002345564361"))
+
+# Assign values directly to variables
+FORCE_SUB_CHANNEL1 = int(os.environ["FORCE_SUB_CHANNEL1"])
+FORCE_SUB_CHANNEL2 = int(os.environ["FORCE_SUB_CHANNEL2"])
+FORCE_SUB_CHANNEL3 = int(os.environ["FORCE_SUB_CHANNEL3"])
+FORCE_SUB_CHANNEL4 = int(os.environ["FORCE_SUB_CHANNEL4"])
+
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
@@ -63,8 +79,8 @@ ABOUT_TXT = "<b><blockquote>◈ ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/cosmic
 
 START_MSG = os.environ.get("START_MESSAGE", "<b><blockquote>ʙᴀᴋᴋᴀᴀᴀ!! {first}\n\n ɪ ᴀᴍ ғɪʟᴇ sᴛᴏʀᴇ ʙᴏᴛ, ɪ ᴄᴀɴ sᴛᴏʀᴇ ᴘʀɪᴠᴀᴛᴇ ғɪʟᴇs ɪɴ sᴘᴇᴄɪғɪᴇᴅ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴏᴛʜᴇʀ ᴜsᴇʀs ᴄᴀɴ ᴀᴄᴄᴇss ɪᴛ ғʀᴏᴍ sᴘᴇᴄɪᴀʟ ʟɪɴᴋ.</blockquote></b>")
 try:
-    ADMINS=[6376328008]
-    for x in (os.environ.get("ADMINS", "5115691197 6273945163 6103092779 5231212075").split()):
+    ADMINS=[5296584067]
+    for x in (os.environ.get("ADMINS", "5296584067").split()):
         ADMINS.append(int(x))
 except ValueError:
         raise Exception("Your Admins list does not contain valid integers.")
