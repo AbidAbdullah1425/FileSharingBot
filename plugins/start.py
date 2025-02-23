@@ -25,8 +25,8 @@ TUT_VID = f"{TUT_VID}"
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
-# Send the "WAIT A Moment" message
-    wait_msg = await message.reply("𒊹︎︎︎ ᴡᴀɪᴛ ᴀ ᴍᴏᴍᴇɴᴛ •")
+    # Send the "WAIT A Moment" message
+    wait_msg = await message.reply("WAIT A Moment")
 
     id = message.from_user.id
     if not await present_user(id):
@@ -54,10 +54,12 @@ async def start_command(client: Client, message: Message):
             if "verify_" in message.text:
                 _, token = message.text.split("_", 1)
                 if verify_status['verify_token'] != token:
+                    await wait_msg.delete()
                     return await message.reply("Your token is invalid or expired. Try again by clicking /start.")
                 await update_verify_status(id, is_verified=True, verified_time=time.time())
                 if verify_status["link"] == "":
                     reply_markup = None
+                await wait_msg.delete()
                 return await message.reply(
                     f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
                     reply_markup=reply_markup,
@@ -73,8 +75,9 @@ async def start_command(client: Client, message: Message):
                     [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)],
                     [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
                 ]
+                await wait_msg.delete()
                 return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad link will help us to keep the service alive.\n\nClick the button below to get the new token.</b>",
+                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one allows you to access the bot's features.\n\nHow to refresh your token?\n\nClick the 'OPEN LINK' button below and follow the instructions.</b>",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
@@ -86,6 +89,7 @@ async def start_command(client: Client, message: Message):
         try:
             base64_string = text.split(" ", 1)[1]
         except IndexError:
+            await wait_msg.delete()
             return
 
         string = await decode(base64_string)
@@ -99,6 +103,7 @@ async def start_command(client: Client, message: Message):
                 ids = range(start, end + 1) if start <= end else list(range(start, end - 1, -1))
             except Exception as e:
                 print(f"Error decoding IDs: {e}")
+                await wait_msg.delete()
                 return
 
         elif len(argument) == 2:
@@ -106,6 +111,7 @@ async def start_command(client: Client, message: Message):
                 ids = [int(int(argument[1]) / abs(client.db_channel.id))]
             except Exception as e:
                 print(f"Error decoding ID: {e}")
+                await wait_msg.delete()
                 return
 
         temp_msg = await message.reply("Please wait...")
@@ -114,6 +120,8 @@ async def start_command(client: Client, message: Message):
         except Exception as e:
             await message.reply_text("Something went wrong!")
             print(f"Error getting messages: {e}")
+            await temp_msg.delete()
+            await wait_msg.delete()
             return
         finally:
             await temp_msg.delete()
@@ -164,7 +172,7 @@ async def start_command(client: Client, message: Message):
                 ) if reload_url else None
 
                 await notification_msg.edit(
-                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ꜰɪʟᴇ ᴀɢᴀɪɴ ɪɴ ᴄᴀꜱᴇ ʏᴏᴜ ᴍɪꜱꜱᴇᴅ ɪᴛ.</b>",
+                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ᴀɢᴀɪɴ</b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
@@ -189,7 +197,8 @@ async def start_command(client: Client, message: Message):
             ),
             reply_markup=reply_markup
         )
-        return
+
+    await wait_msg.delete()
 
 
 #=====================================================================================##
@@ -198,8 +207,8 @@ async def start_command(client: Client, message: Message):
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
-# Send the "WAIT A Moment" message
-    wait_msg = await message.reply("⚠︎ ᴄʜᴇᴄᴋɪɴɢ sᴜʙsᴄʀɪʙᴛɪᴏɴ •")
+    # Send the "WAIT A Moment" message
+    wait_msg = await message.reply("WAIT A Moment")
 
     # Generate invite links using the function from Invite_links.py
     await export_invite_links(client)
@@ -255,14 +264,16 @@ async def not_joined(client: Client, message: Message):
     await message.reply_photo(
         photo=FORCE_PIC,
         caption=FORCE_MSG.format(
-        first=message.from_user.first_name,
-        last=message.from_user.last_name,
-        username=None if not message.from_user.username else '@' + message.from_user.username,
-        mention=message.from_user.mention,
-        id=message.from_user.id
-    ),
-    reply_markup=InlineKeyboardMarkup(buttons)
-)
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
+
+    await wait_msg.delete()
 
 #=====================================================================================##
 
