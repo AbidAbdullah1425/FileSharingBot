@@ -15,7 +15,6 @@ from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
 from bot import Bot
 from config import *
-import config
 from helper_func import *
 from database.database import *
 from plugins.Invite_links import export_invite_links
