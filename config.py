@@ -80,6 +80,7 @@ ABOUT_TXT = "<b><blockquote>» ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/NocoWhi
 
 
 START_MSG = os.environ.get("START_MESSAGE", "<b><blockquote>Iʏʏʏᴀᴀᴀᴀᴀ {first}\n\nɪ ᴄᴀɴ ɢɪᴠᴇ ʏᴏᴜ ʟᴀᴛᴇsᴛ ʙᴀᴛᴛʟᴇ ᴛʜʀᴏᴜɢʜ ᴛʜᴇ ʜᴇᴀᴠᴇɴs ᴇᴘɪsᴏᴅᴇs.</blockquote></b>")
+
 try:
     ADMINS=[5296584067]
     for x in (os.environ.get("ADMINS", "5296584067").split()):
@@ -88,7 +89,7 @@ except ValueError:
         raise Exception("Your Admins list does not contain valid integers.")
 
 #Force sub message 
-FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "<blockquote>ʜᴇʟʟᴏ {first}\n\n<b>ᴊᴏɪɴ ʙᴇʟᴏᴡ ᴄʜᴀɴɴᴇʟs ᴛʜᴇɴ ᴘʀᴇss ʀᴇʟᴏᴀᴅ ʙᴜᴛᴛᴏɴ.ɪ ᴡɪʟʟ ʙᴇ ᴛʜᴇʀᴇ ᴡɪᴛʜ ʏᴏᴜʀ ᴇᴘɪsᴏᴅᴇ.</b></blockquote>")
+FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "ʜᴇʟʟᴏ {first}\n\n<b><blockquote>ᴊᴏɪɴ ʙᴇʟᴏᴡ ᴄʜᴀɴɴᴇʟs ᴛʜᴇɴ ᴘʀᴇss ʀᴇʟᴏᴀᴅ ʙᴜᴛᴛᴏɴ.ɪ ᴡɪʟʟ ʙᴇ ᴛʜᴇʀᴇ ᴡɪᴛʜ ʏᴏᴜʀ ᴇᴘɪsᴏᴅᴇ.</b></blockquote>")
 
 #set your Custom Caption here, Keep None for Disable Custom Caption
 CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", "ᴇɴᴄᴏᴅᴇᴅ ʙʏ @HeavenlySubs")
