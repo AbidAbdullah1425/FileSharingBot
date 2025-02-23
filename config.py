@@ -34,7 +34,7 @@ TIME = int(os.environ.get("TIME", "1800"))
 
 # Connect to MongoDB
 client = MongoClient(DB_URL)
-db = client[config.DB_NAME]
+db = client[DB_NAME]
 collection = db["force_sub_channels"]
 
 
