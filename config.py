@@ -42,7 +42,7 @@ FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "-1002345564361"))
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
 START_PIC = os.environ.get("START_PIC", "https://envs.sh/FVk.jpg")
-FORCE_PIC = os.environ.get("FORCE_PIC", "https://envs.sh/FVk.jpg")
+FORCE_PIC = os.environ.get("FORCE_PIC", "https://envs.sh/FVU.jpg")
 ADMIN_PIC = os.environ.get("ADMIN_PIC", "https://envs.sh/_BZ.jpg")
 
 
