@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
+from config import DB_NAME, DB_URL
 import importlib
 import os
 import config
@@ -7,7 +8,7 @@ from bot import Bot
 from pymongo import MongoClient
 
 # Connect to MongoDB
-client = MongoClient(MONGO_URI)
+client = MongoClient(DB_URL)
 db = client[DB_NAME]
 collection = db['force_sub_channels']
 
