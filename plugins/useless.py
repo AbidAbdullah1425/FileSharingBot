@@ -11,7 +11,7 @@ last_message_time = {}
 # Cooldown period in seconds
 COOLDOWN_PERIOD = 10
 
-@Bot.on_message(filters.command('uptime') & filters.user(ADMINS))
+@Bot.on_message(filters.command('uptime'))
 async def stats(bot: Bot, message: Message):
     now = datetime.now()
     delta = now - bot.uptime
