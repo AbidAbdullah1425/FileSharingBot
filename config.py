@@ -62,7 +62,7 @@ HELP_TXT = "<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏ�
 ABOUT_TXT = "<b><blockquote>» ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/NocoWhiz>Nᴏᴄᴏ</a>\n◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/HeavenlySubs>HᴇᴀᴠᴇɴʟʏSᴜʙs</a>\n◈ ᴄʜᴀᴛ ɢʀᴏᴜᴘ : <a href=https://t.me/HeavenlySubsChat>Gʀᴏᴜᴘ</a>\n◈ sᴘᴏɪʟᴇʀs & ᴘʀᴇᴠɪᴇᴡs : <a href=https://t.me/SpoilersPreviews_HS>Jᴏɪɴ Nᴏᴡ</a>\n◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/NocoWhiz>Nᴏᴄᴏ</a></blockquote></b>"
 
 
-START_MSG = os.environ.get("START_MESSAGE", "<b>Iʏʏʏᴀᴀᴀᴀᴀ {first}\n\n<blockquote>ɪ ᴄᴀɴ ɢɪᴠᴇ ʏᴏᴜ ʟᴀᴛᴇsᴛ ʙᴀᴛᴛʟᴇ ᴛʜʀᴏᴜɢʜ ᴛʜᴇ ʜᴇᴀᴠᴇɴs ᴇᴘɪsᴏᴅᴇs.</b></blockquote>")
+START_MSG = os.environ.get("START_MESSAGE", "<b>Iʏʏʏᴀᴀᴀᴀᴀ {first}\n\n<blockquote>ɪ ᴄᴀɴ ɢɪᴠᴇ ʏᴏᴜ ʟᴀᴛᴇsᴛ ʙᴀᴛᴛʟᴇ ᴛʜʀᴏᴜɢʜ ᴛʜᴇ ʜᴇᴀᴠᴇɴs ᴇᴘɪsᴏᴅᴇs.</blockquote></b>")
 
 try:
     ADMINS=[5296584067]
