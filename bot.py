@@ -8,6 +8,9 @@ import sys
 from datetime import datetime
 from config import *
 from plugins.Invite_links import export_invite_links
+from config import load_settings
+import asyncio
+
 
 name ="""
  BY CODEFLIX BOTS
@@ -59,7 +62,10 @@ class Bot(Client):
         self.username = usr_bot_me.username
         self.LOGGER(__name__).info(f"Bot Running..! Made by @Codeflix_Bots")
 
-        # Log FORCE_SUB_CHANNEL* variables
+# Load settings before starting the bot
+asyncio.run(load_settings())
+
+# Log FORCE_SUB_CHANNEL* variables
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL2: {FORCE_SUB_CHANNEL2}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL3: {FORCE_SUB_CHANNEL3}")
