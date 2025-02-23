@@ -29,128 +29,133 @@ logger = logging.getLogger(__name__)
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
-    logger.info(f"Received /start from {message.from_user.id}")
-
+# Send the "WAIT A Moment" message
     wait_msg = await message.reply("𒊹︎︎︎ ᴡᴀɪᴛ ᴀ ᴍᴏᴍᴇɴᴛ •")
 
     id = message.from_user.id
     if not await present_user(id):
         try:
             await add_user(id)
-            logger.info(f"Added new user: {id}")
-        except Exception as e:
-            logger.error(f"Failed to add user {id}: {e}", exc_info=True)
+        except:
+            pass
 
+    # Check if user is an admin and treat them as verified
     if id in ADMINS:
-        verify_status = {'is_verified': True, 'verify_token': None, 'verified_time': time.time(), 'link': ""}
-        logger.info(f"User {id} is an admin, bypassing verification.")
+        verify_status = {
+            'is_verified': True,
+            'verify_token': None,  # Admins don't need a token
+            'verified_time': time.time(),
+            'link': ""
+        }
     else:
-        try:
-            verify_status = await get_verify_status(id)
-        except Exception as e:
-            logger.error(f"Error fetching verify status for user {id}: {e}", exc_info=True)
-            return await wait_msg.delete()
+        verify_status = await get_verify_status(id)
 
+        # If TOKEN is enabled, handle verification logic
         if TOKEN:
             if verify_status['is_verified'] and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
                 await update_verify_status(id, is_verified=False)
-                logger.info(f"Verification expired for user {id}, resetting.")
 
             if "verify_" in message.text:
                 _, token = message.text.split("_", 1)
                 if verify_status['verify_token'] != token:
-                    logger.warning(f"Invalid token attempt by user {id}")
                     return await message.reply("Your token is invalid or expired. Try again by clicking /start.")
-
                 await update_verify_status(id, is_verified=True, verified_time=time.time())
-                logger.info(f"User {id} successfully verified.")
-
                 if verify_status["link"] == "":
                     reply_markup = None
                 return await message.reply(
                     f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
-                    reply_markup=reply_markup, quote=True
+                    reply_markup=reply_markup,
+                    protect_content=False,
+                    quote=True
                 )
 
             if not verify_status['is_verified']:
                 token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                 await update_verify_status(id, verify_token=token, link="")
                 link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
-                logger.info(f"Generated new token for user {id}")
-
                 btn = [
                     [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)],
                     [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
                 ]
                 return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.</b>",
-                    reply_markup=InlineKeyboardMarkup(btn), quote=True
+                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad link will help us to keep the service alive.\n\nClick the button below to get the new token.</b>",
+                    reply_markup=InlineKeyboardMarkup(btn),
+                    protect_content=False,
+                    quote=True
                 )
 
+    # Handle normal message flow
     text = message.text
     if len(text) > 7:
         try:
             base64_string = text.split(" ", 1)[1]
-            string = await decode(base64_string)
-            argument = string.split("-")
-        except IndexError as e:
-            logger.warning(f"Malformed start parameter from user {id}: {e}")
+        except IndexError:
             return
 
+        string = await decode(base64_string)
+        argument = string.split("-")
+
         ids = []
-        try:
-            if len(argument) == 3:
+        if len(argument) == 3:
+            try:
                 start = int(int(argument[1]) / abs(client.db_channel.id))
                 end = int(int(argument[2]) / abs(client.db_channel.id))
                 ids = range(start, end + 1) if start <= end else list(range(start, end - 1, -1))
-            elif len(argument) == 2:
+            except Exception as e:
+                print(f"Error decoding IDs: {e}")
+                return
+
+        elif len(argument) == 2:
+            try:
                 ids = [int(int(argument[1]) / abs(client.db_channel.id))]
-            logger.info(f"Extracted message IDs for user {id}: {list(ids)}")
-        except Exception as e:
-            logger.error(f"Error decoding IDs for user {id}: {e}", exc_info=True)
-            return
+            except Exception as e:
+                print(f"Error decoding ID: {e}")
+                return
 
         temp_msg = await message.reply("Please wait...")
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
-            logger.error(f"Error fetching messages for user {id}: {e}", exc_info=True)
-            return await message.reply_text("Something went wrong!")
+            await message.reply_text("Something went wrong!")
+            print(f"Error getting messages: {e}")
+            return
         finally:
             await temp_msg.delete()
 
         codeflix_msgs = []
         for msg in messages:
             caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
-                                             filename=msg.document.file_name) if CUSTOM_CAPTION and msg.document else
-                       ("" if not msg.caption else msg.caption.html))
+                                             filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
+                       else ("" if not msg.caption else msg.caption.html))
 
-            reply_markup = msg.reply_markup if not DISABLE_CHANNEL_BUTTON else None
+            reply_markup = msg.reply_markup if DISABLE_CHANNEL_BUTTON else None
+
             try:
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, reply_markup=reply_markup)
+                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
+                                            reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
-                logger.info(f"Sent message {msg.id} to user {id}")
             except FloodWait as e:
-                logger.warning(f"FloodWait triggered for user {id}, sleeping for {e.x} seconds")
                 await asyncio.sleep(e.x)
-                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, reply_markup=reply_markup)
+                copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
+                                            reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except Exception as e:
-                logger.error(f"Failed to send message {msg.id} to user {id}: {e}", exc_info=True)
+                print(f"Failed to send message: {e}")
+                pass
 
         if FILE_AUTO_DELETE > 0:
             notification_msg = await message.reply(
-                f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save it.</b>"
+                f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</b>"
             )
+
             await asyncio.sleep(FILE_AUTO_DELETE)
 
-            for snt_msg in codeflix_msgs:
+            for snt_msg in codeflix_msgs:    
                 if snt_msg:
-                    try:
-                        await snt_msg.delete()
-                        logger.info(f"Deleted sent message {snt_msg.id} for user {id}")
+                    try:    
+                        await snt_msg.delete()  
                     except Exception as e:
-                        logger.error(f"Error deleting message {snt_msg.id}: {e}", exc_info=True)
+                        print(f"Error deleting message {snt_msg.id}: {e}")
 
             try:
                 reload_url = (
@@ -163,18 +168,19 @@ async def start_command(client: Client, message: Message):
                 ) if reload_url else None
 
                 await notification_msg.edit(
-                    "<b>Your file has been deleted. Click below to get it again.</b>",
+                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ꜰɪʟᴇ ᴀɢᴀɪɴ ɪɴ ᴄᴀꜱᴇ ʏᴏᴜ ᴍɪꜱꜱᴇᴅ ɪᴛ.</b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
-                logger.error(f"Error updating notification message for user {id}: {e}", exc_info=True)
-
+                print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
         reply_markup = InlineKeyboardMarkup(
-            [[
-                InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
-                InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
-            ]]
+            [
+                [
+                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
+                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
+                ]
+            ]
         )
         await message.reply_photo(
             photo=START_PIC,
@@ -187,7 +193,7 @@ async def start_command(client: Client, message: Message):
             ),
             reply_markup=reply_markup
         )
-        logger.info(f"Sent start message to user {id}")
+        return
 
 
 
