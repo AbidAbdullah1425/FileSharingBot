@@ -10,11 +10,12 @@ import string
 import humanize
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
 from bot import Bot
 from config import *
+import config
 from helper_func import *
 from database.database import *
 from plugins.Invite_links import export_invite_links
@@ -25,8 +26,8 @@ TUT_VID = f"{TUT_VID}"
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
-# Send the "WAIT A Moment" message
-    wait_msg = await message.reply("𒊹︎︎︎ ᴡᴀɪᴛ ᴀ ᴍᴏᴍᴇɴᴛ •")
+    # Send the "WAIT A Moment" message
+    wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
 
     id = message.from_user.id
     if not await present_user(id):
@@ -35,12 +36,61 @@ async def start_command(client: Client, message: Message):
         except:
             pass
 
+    # Check if user is an admin and treat them as verified
+    if id in ADMINS:
+        verify_status = {
+            'is_verified': True,
+            'verify_token': None,  # Admins don't need a token
+            'verified_time': time.time(),
+            'link': ""
+        }
+    else:
+        verify_status = await get_verify_status(id)
+
+        # If TOKEN is enabled, handle verification logic
+        if TOKEN:
+            if verify_status['is_verified'] and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
+                await update_verify_status(id, is_verified=False)
+
+            if "verify_" in message.text:
+                _, token = message.text.split("_", 1)
+                if verify_status['verify_token'] != token:
+                    await wait_msg.delete()
+                    return await message.reply("Your token is invalid or expired. Try again by clicking /start.")
+                await update_verify_status(id, is_verified=True, verified_time=time.time())
+                if verify_status["link"] == "":
+                    reply_markup = None
+                await wait_msg.delete()
+                return await message.reply(
+                    f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
+                    reply_markup=reply_markup,
+                    protect_content=False,
+                    quote=True
+                )
+
+            if not verify_status['is_verified']:
+                token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+                await update_verify_status(id, verify_token=token, link="")
+                link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
+                btn = [
+                    [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)],
+                    [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
+                ]
+                await wait_msg.delete()
+                return await message.reply(
+                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one a[...]",
+                    reply_markup=InlineKeyboardMarkup(btn),
+                    protect_content=False,
+                    quote=True
+                )
+
     # Handle normal message flow
     text = message.text
     if len(text) > 7:
         try:
             base64_string = text.split(" ", 1)[1]
         except IndexError:
+            await wait_msg.delete()
             return
 
         string = await decode(base64_string)
@@ -54,6 +104,7 @@ async def start_command(client: Client, message: Message):
                 ids = range(start, end + 1) if start <= end else list(range(start, end - 1, -1))
             except Exception as e:
                 print(f"Error decoding IDs: {e}")
+                await wait_msg.delete()
                 return
 
         elif len(argument) == 2:
@@ -61,6 +112,7 @@ async def start_command(client: Client, message: Message):
                 ids = [int(int(argument[1]) / abs(client.db_channel.id))]
             except Exception as e:
                 print(f"Error decoding ID: {e}")
+                await wait_msg.delete()
                 return
 
         temp_msg = await message.reply("Please wait...")
@@ -69,6 +121,8 @@ async def start_command(client: Client, message: Message):
         except Exception as e:
             await message.reply_text("Something went wrong!")
             print(f"Error getting messages: {e}")
+            await temp_msg.delete()
+            await wait_msg.delete()
             return
         finally:
             await temp_msg.delete()
@@ -96,7 +150,7 @@ async def start_command(client: Client, message: Message):
 
         if FILE_AUTO_DELETE > 0:
             notification_msg = await message.reply(
-                f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</b>"
+                f"<b><blockquote>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</blockquote></b>"
             )
 
             await asyncio.sleep(FILE_AUTO_DELETE)
@@ -115,21 +169,35 @@ async def start_command(client: Client, message: Message):
                     else None
                 )
                 keyboard = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("Get File Again!", url=reload_url)]]
+                    [
+                        [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)],
+                        [InlineKeyboardButton(" ᴄʟᴏsᴇ •", callback_data="close")]
+                    ]
                 ) if reload_url else None
 
                 await notification_msg.edit(
-                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ꜰɪʟᴇ ᴀɢᴀɪɴ ɪɴ ᴄᴀꜱᴇ ʏᴏᴜ ᴍɪꜱꜱᴇᴅ ɪᴛ.</b>",
+                    "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=\"{reload_url}\">ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ</a></blockquote></b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
+
+@Bot.on_callback_query()
+async def cb_handler(client: Bot, query: CallbackQuery):
+    data = query.data
+    if data == "close":
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
+
     else:
         reply_markup = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
-                    InlineKeyboardButton('🍁 sᴇʀɪᴇsғʟɪx', url='https://t.me/Team_Netflix/40')
+                    InlineKeyboardButton('🍁 ʜᴇᴀᴠᴇɴʟʏsᴜʙs', url='https://t.me/HeavenlySubs')
                 ]
             ]
         )
@@ -144,10 +212,8 @@ async def start_command(client: Client, message: Message):
             ),
             reply_markup=reply_markup
         )
-        return
+
     await wait_msg.delete()
-
-
 
 #=====================================================================================##
 # Don't Remove Credit @CodeFlix_Bots, @rohit_1888
@@ -155,8 +221,8 @@ async def start_command(client: Client, message: Message):
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
-# Send the "WAIT A Moment" message
-    wait_msg = await message.reply("⚠︎ ᴄʜᴇᴄᴋɪɴɢ sᴜʙsᴄʀɪʙᴛɪᴏɴ •")
+    # Send the "WAIT A Moment" message
+    wait_msg = await message.reply("› › ᴄʜᴇᴄᴋɪɴɢ ᴍᴇᴍʙᴇʀsʜɪᴘ...")
 
     # Generate invite links using the function from Invite_links.py
     await export_invite_links(client)
@@ -212,18 +278,20 @@ async def not_joined(client: Client, message: Message):
     await message.reply_photo(
         photo=FORCE_PIC,
         caption=FORCE_MSG.format(
-        first=message.from_user.first_name,
-        last=message.from_user.last_name,
-        username=None if not message.from_user.username else '@' + message.from_user.username,
-        mention=message.from_user.mention,
-        id=message.from_user.id
-    ),
-    reply_markup=InlineKeyboardMarkup(buttons)
-)
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
+
+    await wait_msg.delete()
 
 #=====================================================================================##
 
-WAIT_MSG = "<b>Working....</b>"
+WAIT_MSG = "<b>ᴡᴏʀᴋɪɴɢ....</b>"
 
 REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
 
