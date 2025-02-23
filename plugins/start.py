@@ -180,36 +180,16 @@ async def start_command(client: Client, message: Message):
                 )
                 keyboard = InlineKeyboardMarkup(
                     [
-                        [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)],
-                        [InlineKeyboardButton(" ᴄʟᴏsᴇ •", callback_data="close")]
+                        [InlineKeyboardButton("Get Files Again!", url=reload_url)],
+                        [InlineKeyboardButton("Close", callback_data="close")]
                     ]
                 ) if reload_url else None
 
-                new_content = "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=[...]</blockquote></b>"
+                new_content = "<b><blockquote>Your file has been successfully deleted!!\n\nClick the button below to get your file again in case you missed it.</blockquote></b>"
                 if notification_msg.text != new_content:
                     await notification_msg.edit(new_content, reply_markup=keyboard)
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
-
-    else:
-        reply_markup = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data="about")
-                ]
-            ]
-        )
-        await message.reply_photo(
-            photo=START_PIC,
-            caption=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=reply_markup
-        )
 
     await wait_msg.delete()
 
