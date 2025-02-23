@@ -34,8 +34,6 @@ async def cb_handler(client: Bot, query: CallbackQuery):
         except:
             pass
 
-
-
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
     # Send the "WAIT A Moment" message
@@ -188,13 +186,11 @@ async def start_command(client: Client, message: Message):
                 ) if reload_url else None
 
                 await notification_msg.edit(
-                    "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=\"{reload_url}\">ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ</a></blockquote></b>",
+                    "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=[...]</blockquote></b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
-
-
 
     else:
         reply_markup = InlineKeyboardMarkup(
