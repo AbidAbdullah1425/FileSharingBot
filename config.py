@@ -32,28 +32,11 @@ DB_NAME = os.environ.get("DATABASE_NAME", "Cluster0")
 #Time in seconds for message delete, put 0 to never delete
 TIME = int(os.environ.get("TIME", "1800"))
 
-# Connect to MongoDB
-client = MongoClient(DB_URL)
-db = client[DB_NAME]
-collection = db["force_sub_channels"]
-
-
-def fetch_force_sub_channel(channel_number, default_value):
-    """Fetch force sub-channel ID from MongoDB or fallback to default."""
-    data = collection.find_one({'_id': f"FORCE_SUB_CHANNEL{channel_number}"})
-    return data["value"] if data else default_value
-
-# Fetch values from MongoDB and update environment variables
-os.environ["FORCE_SUB_CHANNEL1"] = str(fetch_force_sub_channel(1, "-1002386614375"))
-os.environ["FORCE_SUB_CHANNEL2"] = str(fetch_force_sub_channel(2, "-1002355785538"))
-os.environ["FORCE_SUB_CHANNEL3"] = str(fetch_force_sub_channel(3, "-1002315395252"))
-os.environ["FORCE_SUB_CHANNEL4"] = str(fetch_force_sub_channel(4, "-1002345564361"))
-
-# Assign values directly to variables
-FORCE_SUB_CHANNEL1 = int(os.environ["FORCE_SUB_CHANNEL1"])
-FORCE_SUB_CHANNEL2 = int(os.environ["FORCE_SUB_CHANNEL2"])
-FORCE_SUB_CHANNEL3 = int(os.environ["FORCE_SUB_CHANNEL3"])
-FORCE_SUB_CHANNEL4 = int(os.environ["FORCE_SUB_CHANNEL4"])
+FORCE_SUB_CHANNEL1 = int(os.environ.get("FORCE_SUB_CHANNEL1", "-1002386614375"))
+#put 0 to disable
+FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "-1002355785538"))#put 0 to disable
+FORCE_SUB_CHANNEL3 = int(os.environ.get("FORCE_SUB_CHANNEL3", "-1002315395252"))#put 0 to disable
+FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "-1002345564361"))#put 0 to disable
 
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
@@ -79,7 +62,7 @@ HELP_TXT = "<b><blockquote>ᴛʜɪs ɪs ᴀɴ ғɪʟᴇ ᴛᴏ ʟɪɴᴋ ʙᴏ�
 ABOUT_TXT = "<b><blockquote>» ᴄʀᴇᴀᴛᴏʀ: <a href=https://t.me/NocoWhiz>Nᴏᴄᴏ</a>\n◈ ꜰᴏᴜɴᴅᴇʀ ᴏꜰ : <a href=https://t.me/HeavenlySubs>HᴇᴀᴠᴇɴʟʏSᴜʙs</a>\n◈ ᴄʜᴀᴛ ɢʀᴏᴜᴘ : <a href=https://t.me/HeavenlySubsChat>Gʀᴏᴜᴘ</a>\n◈ sᴘᴏɪʟᴇʀs & ᴘʀᴇᴠɪᴇᴡs : <a href=https://t.me/SpoilersPreviews_HS>Jᴏɪɴ Nᴏᴡ</a>\n◈ ᴅᴇᴠᴇʟᴏᴘᴇʀ : <a href=https://t.me/NocoWhiz>Nᴏᴄᴏ</a></blockquote></b>"
 
 
-START_MSG = os.environ.get("START_MESSAGE", "<b>Iʏʏʏᴀᴀᴀᴀᴀ {first}\n\nɪ ᴄᴀɴ ɢɪᴠᴇ ʏᴏᴜ ʟᴀᴛᴇsᴛ ʙᴀᴛᴛʟᴇ ᴛʜʀᴏᴜɢʜ ᴛʜᴇ ʜᴇᴀᴠᴇɴs ᴇᴘɪsᴏᴅᴇs.</b>")
+START_MSG = os.environ.get("START_MESSAGE", "<b>Iʏʏʏᴀᴀᴀᴀᴀ {first}\n\n<blockquote>ɪ ᴄᴀɴ ɢɪᴠᴇ ʏᴏᴜ ʟᴀᴛᴇsᴛ ʙᴀᴛᴛʟᴇ ᴛʜʀᴏᴜɢʜ ᴛʜᴇ ʜᴇᴀᴠᴇɴs ᴇᴘɪsᴏᴅᴇs.</b></blockquote>")
 
 try:
     ADMINS=[5296584067]
