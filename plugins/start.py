@@ -183,7 +183,7 @@ if FILE_AUTO_DELETE > 0:
         ) if reload_url else None
 
         await notification_msg.edit(
-            "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ • ɢᴇᴛ ғɪʟᴇs • ᴛᴏ ɢᴇᴛ sᴀᴍᴇ ғɪʟᴇ ᴀɢᴀɪɴ.</blockquote></b>",
+            "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ <a href=\"{reload_url}\">• ɢᴇᴛ ғɪʟᴇs •</a> ᴛᴏ ɢᴇᴛ sᴀᴍᴇ ғɪʟᴇ ᴀɢᴀɪɴ.</blockquote></b>",
             reply_markup=keyboard
         )
     except Exception as e:
