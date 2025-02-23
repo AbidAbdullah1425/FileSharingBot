@@ -157,7 +157,7 @@ async def start_command(client: Client, message: Message):
 
 if FILE_AUTO_DELETE > 0:
     notification_msg = await message.reply(
-        f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</b>"
+        f"<b><blockquote>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</blockquote></b>"
     )
 
     await asyncio.sleep(FILE_AUTO_DELETE)
@@ -183,7 +183,7 @@ if FILE_AUTO_DELETE > 0:
         ) if reload_url else None
 
         await notification_msg.edit(
-            "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ.</blockquote></b>",
+            "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ • ɢᴇᴛ ғɪʟᴇs • ᴛᴏ ɢᴇᴛ sᴀᴍᴇ ғɪʟᴇ ᴀɢᴀɪɴ.</blockquote></b>",
             reply_markup=keyboard
         )
     except Exception as e:
