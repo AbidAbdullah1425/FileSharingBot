@@ -42,6 +42,8 @@ TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
 START_PIC = os.environ.get("START_PIC", "https://envs.sh/_BZ.jpg")
 FORCE_PIC = os.environ.get("FORCE_PIC", "https://envs.sh/_BZ.jpg")
+ADMIN_PIC = os.environ.get("ADMIN_PIC", "https://envs.sh/_BZ.jpg")
+
 
 # Turn this feature on or off using True or False put value inside  ""
 # TRUE for yes FALSE if no 
