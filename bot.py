@@ -63,7 +63,7 @@ class Bot(Client):
         self.LOGGER(__name__).info(f"Bot Running..! Made by @Codeflix_Bots")
 
   # Load settings before starting the bot
-        await load_settings()
+        load_settings()
 
         # Log FORCE_SUB_CHANNEL* variables
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
