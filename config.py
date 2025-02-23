@@ -33,7 +33,7 @@ DB_NAME = os.environ.get("DATABASE_NAME", "Cluster0")
 TIME = int(os.environ.get("TIME", "1800"))
 
 # Connect to MongoDB
-client = MongoClient(config.DB_URI)
+client = MongoClient(DB_URL)
 db = client[config.DB_NAME]
 collection = db["force_sub_channels"]
 
