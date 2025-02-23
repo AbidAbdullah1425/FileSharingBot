@@ -180,11 +180,11 @@ async def start_command(client: Client, message: Message):
                 )
                 keyboard = InlineKeyboardMarkup(
                     [
-                [InlineKeyboardButton("Get Files Again!", url=reload_url), InlineKeyboardButton("Close", callback_data="close")]
+                [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url), InlineKeyboardButton("ᴄʟᴏsᴇ •", callback_data="close")]
             ]
                 ) if reload_url else None
 
-                new_content = "<b><blockquote>Your file has been successfully deleted!!\n\nClick the button below to get your file again in case you missed it.</blockquote></b>"
+                new_content = "<b><blockquote>›› Pʀᴇᴠɪᴏᴜs Mᴇssᴀɢᴇ ᴡᴀs Dᴇʟᴇᴛᴇᴅ\n\nIғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɢᴇᴛ ᴛʜᴇ ғɪʟᴇs ᴀɢᴀɪɴ, ᴛʜᴇɴ ᴄʟɪᴄᴋ: <a href=\"{reload_url}\">ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ</a> ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴇʟsᴇ ᴄʟᴏsᴇ ᴛʜɪs ᴍᴇssᴀɢᴇ.</blockquote></b>"
                 if notification_msg.text != new_content:
                     await notification_msg.edit(new_content, reply_markup=keyboard)
             except Exception as e:
