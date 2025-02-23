@@ -39,10 +39,13 @@ client = MongoClient(DB_URL)
 db = client[DB_NAME]
 collection = db['force_sub_channels']
 
-async def load_settings():
+def load_settings():
     for i in range(1, 5):
-        setting = await collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
+        setting = collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
         os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
+
+# Call this function during bot startup
+load_settings()
 
 FORCE_SUB_CHANNEL1 = int(os.getenv("FORCE_SUB_CHANNEL1", "0"))
 FORCE_SUB_CHANNEL2 = int(os.getenv("FORCE_SUB_CHANNEL2", "0"))
