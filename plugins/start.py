@@ -18,6 +18,7 @@ from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
+from plugins.Invite_links import export_invite_links
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
