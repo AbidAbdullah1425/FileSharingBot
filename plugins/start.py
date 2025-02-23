@@ -196,8 +196,7 @@ async def start_command(client: Client, message: Message):
         reply_markup = InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton("⚡️ ᴀʙᴏᴜᴛ", callback_data="about"),
-                    InlineKeyboardButton('🍁 ʜᴇᴀᴠᴇɴʟʏsᴜʙs', url='https://t.me/HeavenlySubs')
+                    InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data="about")
                 ]
             ]
         )
