@@ -1,9 +1,10 @@
 import os
 from bot import Bot
+from config import OWNER_ID
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-@Bot.on_message(filters.private & filters.command('logs') & filters.user(ADMINS))
+@Bot.on_message(filters.private & filters.command('logs') & filters.user(OWNER_ID))
 async def send_logs(client: Bot, message: Message):
     log_file_path = "filesharingbot.txt"  # Log file name as specified in config.py
     
