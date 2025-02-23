@@ -147,36 +147,52 @@ async def start_command(client: Client, message: Message):
                 print(f"Failed to send message: {e}")
                 pass
 
-        if FILE_AUTO_DELETE > 0:
-            notification_msg = await message.reply(
-                f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</b>"
-            )
 
-            await asyncio.sleep(FILE_AUTO_DELETE)
+if FILE_AUTO_DELETE > 0:
+    notification_msg = await message.reply(
+        f"<b>This file will be deleted in {get_exp_time(FILE_AUTO_DELETE)}. Please save or forward it to your saved messages before it gets deleted.</b>"
+    )
 
-            for snt_msg in codeflix_msgs:    
-                if snt_msg:
-                    try:    
-                        await snt_msg.delete()  
-                    except Exception as e:
-                        print(f"Error deleting message {snt_msg.id}: {e}")
+    await asyncio.sleep(FILE_AUTO_DELETE)
 
-            try:
-                reload_url = (
-                    f"https://t.me/{client.username}?start={message.command[1]}"
-                    if message.command and len(message.command) > 1
-                    else None
-                )
-                keyboard = InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)]]
-                ) if reload_url else None
-
-                await notification_msg.edit(
-                    "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ᴀɢᴀɪɴ</b></blockquote>",
-                    reply_markup=keyboard
-                )
+    for snt_msg in codeflix_msgs:    
+        if snt_msg:
+            try:    
+                await snt_msg.delete()  
             except Exception as e:
-                print(f"Error updating notification with 'Get File Again' button: {e}")
+                print(f"Error deleting message {snt_msg.id}: {e}")
+
+    try:
+        reload_url = (
+            f"https://t.me/{client.username}?start={message.command[1]}"
+            if message.command and len(message.command) > 1
+            else None
+        )
+        keyboard = InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton("• ɢᴇᴛ ғɪʟᴇs •", url=reload_url)],
+                [InlineKeyboardButton(" ᴄʟᴏsᴇ •", callback_data="close")]
+            ]
+        ) if reload_url else None
+
+        await notification_msg.edit(
+            "<b><blockquote>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ғɪʟᴇs ᴀɢᴀɪɴ.</blockquote></b>",
+            reply_markup=keyboard
+        )
+    except Exception as e:
+        print(f"Error updating notification with 'Get File Again' button: {e}")
+
+
+@Bot.on_callback_query()
+async def cb_handler(client: Bot, query: CallbackQuery):
+    data = query.data
+    if data == "close":
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
+
     else:
         reply_markup = InlineKeyboardMarkup(
             [
@@ -277,7 +293,7 @@ async def not_joined(client: Client, message: Message):
 
 #=====================================================================================##
 
-WAIT_MSG = "<b>Working....</b>"
+WAIT_MSG = "<b>ᴡᴏʀᴋɪɴɢ....</b>"
 
 REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
 
