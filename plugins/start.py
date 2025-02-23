@@ -180,9 +180,8 @@ async def start_command(client: Client, message: Message):
                 )
                 keyboard = InlineKeyboardMarkup(
                     [
-                        [InlineKeyboardButton("Get Files Again!", url=reload_url)],
-                        [InlineKeyboardButton("Close", callback_data="close")]
-                    ]
+                [InlineKeyboardButton("Get Files Again!", url=reload_url), InlineKeyboardButton("Close", callback_data="close")]
+            ]
                 ) if reload_url else None
 
                 new_content = "<b><blockquote>Your file has been successfully deleted!!\n\nClick the button below to get your file again in case you missed it.</blockquote></b>"
