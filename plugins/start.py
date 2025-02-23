@@ -88,6 +88,7 @@ async def start_command(client: Client, message: Message):
                     protect_content=False,
                     quote=True
                 )
+    await wait_msg.delete()
 
     # Handle normal message flow
     text = message.text
@@ -117,7 +118,7 @@ async def start_command(client: Client, message: Message):
                 print(f"Error decoding ID: {e}")
                 return
 
-        temp_msg = await message.reply("Please wait...")
+        temp_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
@@ -199,7 +200,7 @@ async def start_command(client: Client, message: Message):
             reply_markup=reply_markup#,
             #message_effect_id=5104841245755180586  # 🔥
         )
-    await wait_msg.delete()
+    
 
 
 
