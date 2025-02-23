@@ -14,7 +14,6 @@ collection = db['force_sub_channels']
 
 def update_force_sub_channel(channel_number, new_value):
     os.environ[f"FORCE_SUB_CHANNEL{channel_number}"] = str(new_value)
-    reload_config()
     collection.update_one(
         {'_id': f"FORCE_SUB_CHANNEL{channel_number}"},
         {'$set': {'value': new_value}},
@@ -34,6 +33,7 @@ async def set_force_sub_channel1(client, message: Message):
 
     update_force_sub_channel(1, new_value)
     await message.reply_text(f"FORCE_SUB_CHANNEL1 updated to {new_value}")
+    reload_config()
 
 @Bot.on_message(filters.command("fsub2") & filters.user(config.OWNER_ID))
 async def set_force_sub_channel2(client, message: Message):
@@ -45,6 +45,7 @@ async def set_force_sub_channel2(client, message: Message):
 
     update_force_sub_channel(2, new_value)
     await message.reply_text(f"FORCE_SUB_CHANNEL2 updated to {new_value}")
+    reload_config()
 
 @Bot.on_message(filters.command("fsub3") & filters.user(config.OWNER_ID))
 async def set_force_sub_channel3(client, message: Message):
@@ -56,6 +57,7 @@ async def set_force_sub_channel3(client, message: Message):
 
     update_force_sub_channel(3, new_value)
     await message.reply_text(f"FORCE_SUB_CHANNEL3 updated to {new_value}")
+    reload_config()
 
 @Bot.on_message(filters.command("fsub4") & filters.user(config.OWNER_ID))
 async def set_force_sub_channel4(client, message: Message):
@@ -67,10 +69,11 @@ async def set_force_sub_channel4(client, message: Message):
 
     update_force_sub_channel(4, new_value)
     await message.reply_text(f"FORCE_SUB_CHANNEL4 updated to {new_value}")
+    reload_config()
 
 @Bot.on_message(filters.command("show_fsubs") & filters.user(config.OWNER_ID))
 async def show_fsubs(client, message: Message):
-    importlib.reload(config)
+    reload_config()
     fsub_values = (
         f"FORCE_SUB_CHANNEL1: {config.FORCE_SUB_CHANNEL1}\n"
         f"FORCE_SUB_CHANNEL2: {config.FORCE_SUB_CHANNEL2}\n"
