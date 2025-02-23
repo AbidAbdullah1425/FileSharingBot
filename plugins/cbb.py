@@ -14,8 +14,8 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
-                        InlineKeyboardButton("ᴄʟᴏꜱᴇ", callback_data='close')
+                        InlineKeyboardButton('• ʙᴀᴄᴋ', callback_data='start'),
+                        InlineKeyboardButton("ᴄʟᴏꜱᴇ •", callback_data='close')
                     ]
                 ]
             )
@@ -26,8 +26,8 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup(
                 [
-                    [InlineKeyboardButton('ʜᴏᴍᴇ', callback_data='start'),
-                     InlineKeyboardButton('ᴄʟᴏꜱᴇ', callback_data='close')]
+                    [InlineKeyboardButton('• ʙᴀᴄᴋ', callback_data='start'),
+                     InlineKeyboardButton('ᴄʟᴏꜱᴇ •', callback_data='close')]
                 ]
             )
         )
@@ -37,7 +37,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("ʜᴇʟᴘ", callback_data='help'),
-                 InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data='about')]
+                 InlineKeyboardButton("• ᴀʙᴏᴜᴛ •", callback_data='about')]
             ])
         )
     
