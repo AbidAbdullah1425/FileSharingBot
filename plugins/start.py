@@ -24,6 +24,18 @@ from plugins.Invite_links import export_invite_links
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
 TUT_VID = f"{TUT_VID}"
 
+@Bot.on_callback_query()
+async def cb_handler(client: Bot, query: CallbackQuery):
+    data = query.data
+    if data == "close":
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
+
+
+
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
     # Send the "WAIT A Moment" message
@@ -165,19 +177,6 @@ async def start_command(client: Client, message: Message):
             try:
                 reload_url = (
                     f"https://t.me/{client.username}?start={message.command[1]}"
-
-
-@Bot.on_callback_query()
-async def cb_handler(client: Bot, query: CallbackQuery):
-    data = query.data
-    if data == "close":
-        await query.message.delete()
-        try:
-            await query.message.reply_to_message.delete()
-        except:
-            pass
-
-
                     if message.command and len(message.command) > 1
                     else None
                 )
