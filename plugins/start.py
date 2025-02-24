@@ -212,8 +212,6 @@ async def start_command(client: Client, message: Message):
 async def not_joined(client: Client, message: Message):
     wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
 
-    load_settings()
-
     # Generate invite links using the function from Invite_links.py
     await export_invite_links(client)
 
