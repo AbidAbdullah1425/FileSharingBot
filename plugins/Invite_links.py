@@ -3,12 +3,7 @@ from config import LOGGER, FORCE_SUB_CHANNEL1, FORCE_SUB_CHANNEL2, FORCE_SUB_CHA
 import importlib
 import config
 
-def reload_config():
-    importlib.reload(config)
-
 async def export_invite_links(client: Client):
-
-    reload_config()
 
 
     try:
