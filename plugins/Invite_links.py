@@ -2,7 +2,14 @@ from pyrogram import Client
 from config import LOGGER, FORCE_SUB_CHANNEL1, FORCE_SUB_CHANNEL2, FORCE_SUB_CHANNEL3, FORCE_SUB_CHANNEL4, CHANNEL_ID
 import config
 
+def reload_config():
+    importlib.reload(config)
+
 async def export_invite_links(client: Client):
+
+    reload_config()
+
+
     try:
         if config.FORCE_SUB_CHANNEL1:
             link = (await client.get_chat(config.FORCE_SUB_CHANNEL1)).invite_link
