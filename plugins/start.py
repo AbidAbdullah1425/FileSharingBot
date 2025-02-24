@@ -24,6 +24,9 @@ from plugins.Invite_links import export_invite_links
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
 TUT_VID = f"{TUT_VID}"
 
+def reload_config():
+    importlib.reload(config)
+
 @Bot.on_callback_query()
 async def cb_handler(client: Bot, query: CallbackQuery):
     data = query.data
@@ -36,6 +39,11 @@ async def cb_handler(client: Bot, query: CallbackQuery):
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
+
+
+    reload_config()
+
+
     id = message.from_user.id
     if not await present_user(id):
         try:
@@ -211,6 +219,10 @@ async def start_command(client: Client, message: Message):
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
     wait_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
+
+
+    reload_config()
+
 
     # Generate invite links using the function from Invite_links.py
     await export_invite_links(client)
