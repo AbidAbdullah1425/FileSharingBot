@@ -41,9 +41,9 @@ def load_settings():
         setting = collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
         os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
 
-FORCE_SUB_CHANNEL1 = int(os.getenv("FORCE_SUB_CHANNEL1", "0"))
-FORCE_SUB_CHANNEL2 = int(os.getenv("FORCE_SUB_CHANNEL2", "0"))
-FORCE_SUB_CHANNEL3 = int(os.getenv("FORCE_SUB_CHANNEL3", "0"))
+FORCE_SUB_CHANNEL1 = int(os.getenv("FORCE_SUB_CHANNEL1", "-1002462572661"))
+FORCE_SUB_CHANNEL2 = int(os.getenv("FORCE_SUB_CHANNEL2", "-1002355785538"))
+FORCE_SUB_CHANNEL3 = int(os.getenv("FORCE_SUB_CHANNEL3", "-1002386614375"))
 FORCE_SUB_CHANNEL4 = int(os.getenv("FORCE_SUB_CHANNEL4", "0"))
 
 
