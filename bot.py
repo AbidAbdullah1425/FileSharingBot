@@ -16,6 +16,8 @@ name ="""
  BY CODEFLIX BOTS
 """
 
+load_settings()
+
 class Bot(Client):
     def __init__(self):
         super().__init__(
@@ -61,9 +63,6 @@ class Bot(Client):
         self.set_parse_mode(ParseMode.HTML)
         self.username = usr_bot_me.username
         self.LOGGER(__name__).info(f"Bot Running..! Made by @Codeflix_Bots")
-
-  # Load settings before starting the bot
-        load_settings()
 
         # Log FORCE_SUB_CHANNEL* variables
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
