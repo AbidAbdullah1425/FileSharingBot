@@ -16,8 +16,6 @@ name ="""
  BY CODEFLIX BOTS
 """
 
-load_settings()
-
 class Bot(Client):
     def __init__(self):
         super().__init__(
@@ -65,7 +63,7 @@ class Bot(Client):
         self.LOGGER(__name__).info(f"Bot Running..! Made by @Codeflix_Bots")
 
         # Log FORCE_SUB_CHANNEL* variables
-        self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
+load_settings()        self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL2: {FORCE_SUB_CHANNEL2}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL3: {FORCE_SUB_CHANNEL3}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL4: {FORCE_SUB_CHANNEL4}")
