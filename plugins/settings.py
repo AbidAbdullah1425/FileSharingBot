@@ -19,6 +19,9 @@ async def toggle_protect_content(client, callback_query):
     new_status = not config.PROTECT_CONTENT
     os.environ["PROTECT_CONTENT"] = "True" if new_status else "False"
 
+    # Ensure the environment variable is updated for the current process
+    os.putenv("PROTECT_CONTENT", "True" if new_status else "False")
+
     # Reload the config module to propagate changes
     importlib.reload(config)
 
