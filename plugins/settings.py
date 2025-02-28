@@ -19,9 +19,6 @@ async def toggle_protect_content(client, callback_query):
     new_status = not config.PROTECT_CONTENT
     os.environ["PROTECT_CONTENT"] = "True" if new_status else "False"
 
-    # Ensure the environment variable is updated for the current process
-    os.putenv("PROTECT_CONTENT", "True" if new_status else "False")
-
     # Reload the config module to propagate changes
     importlib.reload(config)
 
@@ -31,4 +28,3 @@ async def toggle_protect_content(client, callback_query):
         [InlineKeyboardButton(f"Protect Content {protect_content_status}", callback_data="toggle_protect_content")]
     ]
     await callback_query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
-    await callback_query.answer("Protect Content status toggled.")
