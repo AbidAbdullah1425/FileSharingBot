@@ -49,7 +49,7 @@ def load_settings():
     for i in range(1, 5):
         setting = collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
         os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
-
+        globals()[f"FORCE_SUB_CHANNEL{i}"] = int(os.environ[f"FORCE_SUB_CHANNEL{i}"])
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
