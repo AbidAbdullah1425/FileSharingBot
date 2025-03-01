@@ -19,7 +19,9 @@ def update_force_sub_channel(channel_number, new_value):
         {'$set': {'value': new_value}},
         upsert=True
     )
-    globals()[f"FORCE_SUB_CHANNEL{channel_number}"] = new_value
+    # Update the global variable to reflect the change
+    globals()[f"FORCE_SUB_CHANNEL{channel_number}"] = int(os.environ[f"FORCE_SUB_CHANNEL{channel_number}"])
+
 
 def reload_config():
     importlib.reload(config)
