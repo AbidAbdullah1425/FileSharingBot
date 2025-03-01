@@ -36,18 +36,19 @@ client = MongoClient(DB_URL)
 db = client[DB_NAME]
 collection = db['force_sub_channels']
 
-def load_settings():
-    for i in range(1, 5):
-        setting = collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
-        os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
-
-
 #remember default should exist or InlineKeyboardMarkup or SendMedia error can cause
 
 FORCE_SUB_CHANNEL1 = int(os.getenv("FORCE_SUB_CHANNEL1", "-1002462572661"))
 FORCE_SUB_CHANNEL2 = int(os.getenv("FORCE_SUB_CHANNEL2", "-1002355785538"))
 FORCE_SUB_CHANNEL3 = int(os.getenv("FORCE_SUB_CHANNEL3", "-1002386614375"))
 FORCE_SUB_CHANNEL4 = int(os.getenv("FORCE_SUB_CHANNEL4", "-1002315395252"))
+
+
+
+def load_settings():
+    for i in range(1, 5):
+        setting = collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
+        os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
 
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
