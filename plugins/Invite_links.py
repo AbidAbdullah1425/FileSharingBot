@@ -4,8 +4,7 @@ import importlib
 import config
 
 async def export_invite_links(client: Client):
-    # Reload the config module to propagate changes
-    importlib.reload(config)
+
 
     try:
         if config.FORCE_SUB_CHANNEL1:
@@ -17,7 +16,7 @@ async def export_invite_links(client: Client):
     except Exception as e:
         client.LOGGER(__name__).warning(e)
         client.LOGGER(__name__).warning("Bot can't export invite link from Force Sub Channel 1!")
-        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL1 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel ID: {config.FORCE_SUB_CHANNEL1}")
+        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL1 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel value: {config.FORCE_SUB_CHANNEL1}")
 
     try:
         if config.FORCE_SUB_CHANNEL2:
@@ -29,7 +28,7 @@ async def export_invite_links(client: Client):
     except Exception as e:
         client.LOGGER(__name__).warning(e)
         client.LOGGER(__name__).warning("Bot can't export invite link from Force Sub Channel 2!")
-        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL2 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel ID: {config.FORCE_SUB_CHANNEL2}")
+        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL2 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel value: {config.FORCE_SUB_CHANNEL2}")
 
     try:
         if config.FORCE_SUB_CHANNEL3:
@@ -41,7 +40,7 @@ async def export_invite_links(client: Client):
     except Exception as e:
         client.LOGGER(__name__).warning(e)
         client.LOGGER(__name__).warning("Bot can't export invite link from Force Sub Channel 3!")
-        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL3 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel ID: {config.FORCE_SUB_CHANNEL3}")
+        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL3 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel value: {config.FORCE_SUB_CHANNEL3}")
 
     try:
         if config.FORCE_SUB_CHANNEL4:
@@ -53,5 +52,13 @@ async def export_invite_links(client: Client):
     except Exception as e:
         client.LOGGER(__name__).warning(e)
         client.LOGGER(__name__).warning("Bot can't export invite link from Force Sub Channel 4!")
-        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL4 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel ID: {config.FORCE_SUB_CHANNEL4}")
+        client.LOGGER(__name__).warning(f"Please double-check the FORCE_SUB_CHANNEL4 value and make sure the bot is an admin in the channel with Invite Users via Link permission, current Force Sub Channel value: {config.FORCE_SUB_CHANNEL4}")
 
+    try:
+        db_channel = await client.get_chat(config.CHANNEL_ID)
+        client.db_channel = db_channel
+        test = await client.send_message(chat_id=db_channel.id, text="Test Message")
+        await test.delete()
+    except Exception as e:
+        client.LOGGER(__name__).warning(e)
+        client.LOGGER(__name__).warning(f"Make sure the bot is an admin in the DB Channel and double-check the CHANNEL_ID value. Current value: {config.CHANNEL_ID}")
