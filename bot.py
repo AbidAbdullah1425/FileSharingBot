@@ -12,9 +12,11 @@ from config import load_settings
 import asyncio
 
 
-name = """
+name ="""
  BY CODEFLIX BOTS
 """
+
+load_settings()
 
 class Bot(Client):
     def __init__(self):
@@ -34,7 +36,7 @@ class Bot(Client):
         await super().start()
         usr_bot_me = await self.get_me()
         self.uptime = datetime.now()
-        load_settings()
+
         # Generate invite links using the function from Invite_links.py
         await export_invite_links(self)
 
@@ -55,7 +57,7 @@ class Bot(Client):
  / __/ _ \|   \| __| __| |  |_ _\ \/ / _ )/ _ \_   _/ __|
 | (_| (_) | |) | _|| _|| |__ | | >  <| _ \ (_) || | \__ \
  \___\___/|___/|___|_| |____|___/_/\_\___/\___/ |_| |___/
-                                                        
+                                                          
                                           """)
 
         self.set_parse_mode(ParseMode.HTML)
@@ -63,7 +65,6 @@ class Bot(Client):
         self.LOGGER(__name__).info(f"Bot Running..! Made by @Codeflix_Bots")
 
         # Log FORCE_SUB_CHANNEL* variables
-        #load_settings()
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL2: {FORCE_SUB_CHANNEL2}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL3: {FORCE_SUB_CHANNEL3}")
