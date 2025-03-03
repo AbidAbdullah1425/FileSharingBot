@@ -51,6 +51,8 @@ def load_settings():
         os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
         globals()[f"FORCE_SUB_CHANNEL{i}"] = int(os.environ[f"FORCE_SUB_CHANNEL{i}"])
 
+load_settings()
+
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
 START_PIC = os.environ.get("START_PIC", "https://envs.sh/FVk.jpg")
