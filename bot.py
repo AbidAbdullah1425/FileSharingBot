@@ -66,7 +66,7 @@ class Bot(Client):
 
         # Log FORCE_SUB_CHANNEL* variables
         load_settings()
-self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
+        self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL1: {FORCE_SUB_CHANNEL1}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL2: {FORCE_SUB_CHANNEL2}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL3: {FORCE_SUB_CHANNEL3}")
         self.LOGGER(__name__).info(f"FORCE_SUB_CHANNEL4: {FORCE_SUB_CHANNEL4}")
