@@ -38,7 +38,7 @@ collection = db['force_sub_channels']
 
 #remember default should exist or InlineKeyboardMarkup or SendMedia error can cause
 
-comment =
+
 """
 FORCE_SUB_CHANNEL1 = int(os.getenv("FORCE_SUB_CHANNEL1", "-1002462572661"))
 FORCE_SUB_CHANNEL2 = int(os.getenv("FORCE_SUB_CHANNEL2", "-1002355785538"))
