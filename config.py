@@ -38,7 +38,13 @@ collection = db['force_sub_channels']
 
 #remember default should exist or InlineKeyboardMarkup or SendMedia error can cause
 
-
+comment =
+"""
+FORCE_SUB_CHANNEL1 = int(os.getenv("FORCE_SUB_CHANNEL1", "-1002462572661"))
+FORCE_SUB_CHANNEL2 = int(os.getenv("FORCE_SUB_CHANNEL2", "-1002355785538"))
+FORCE_SUB_CHANNEL3 = int(os.getenv("FORCE_SUB_CHANNEL3", "-1002386614375"))
+FORCE_SUB_CHANNEL4 = int(os.getenv("FORCE_SUB_CHANNEL4", "-1002315395252"))
+"""
 
 def load_settings():
     for i in range(1, 5):
