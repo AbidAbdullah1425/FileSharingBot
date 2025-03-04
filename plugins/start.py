@@ -27,9 +27,7 @@ from helper_func import (
     get_exp_time, get_shortlink, decode, get_messages, 
     full_userbase, del_user
 )
-from database.database import (
-    add_user, del_user, full_userbase, present_user, update_verify_status, 
-    get_verify_status
+from database.database import*
 )
 from plugins.Invite_links import export_invite_links
 import importlib
