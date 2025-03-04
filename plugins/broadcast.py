@@ -1,3 +1,11 @@
+import asyncio
+from pyrogram import Client, filters
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
+from pyrogram.types import Message
+from bot import Bot
+from config import ADMINS
+from database.database import full_userbase, del_user
+
 #=====================================================================================##
 
 REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
