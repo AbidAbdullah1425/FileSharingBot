@@ -27,7 +27,7 @@ from helper_func import (
     get_exp_time, get_shortlink, decode, get_messages, 
     full_userbase, del_user
 )
-from database.database import*
+from database.database import *
 )
 from plugins.Invite_links import export_invite_links
 import importlib
