@@ -48,8 +48,10 @@ FORCE_SUB_CHANNEL4 = int(os.getenv("FORCE_SUB_CHANNEL4", "-1002315395252"))
 def load_settings():
     for i in range(1, 5):
         setting = collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
-        os.environ[f"FORCE_SUB_CHANNEL{i}"] = str(setting["value"]) if setting else "0"
-        globals()[f"FORCE_SUB_CHANNEL{i}"] = int(os.environ[f"FORCE_SUB_CHANNEL{i}"])
+        value = str(setting["value"]) if setting else "0"
+        if value != "0":
+            os.environ[f"FORCE_SUB_CHANNEL{i}"] = value
+        globals()[f"FORCE_SUB_CHANNEL{i}"] = int(value)
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
