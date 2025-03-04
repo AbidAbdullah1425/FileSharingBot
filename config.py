@@ -46,6 +46,13 @@ FORCE_SUB_CHANNEL3 = int(os.getenv("FORCE_SUB_CHANNEL3", "-1002386614375"))
 FORCE_SUB_CHANNEL4 = int(os.getenv("FORCE_SUB_CHANNEL4", "-1002315395252"))
 """
 
+#force sub channel id, if you want enable force sub
+FORCE_SUB_CHANNEL1 = int(os.environ.get("FORCE_SUB_CHANNEL1", "0"))
+#put 0 to disable
+FORCE_SUB_CHANNEL2 = int(os.environ.get("FORCE_SUB_CHANNEL2", "0"))#put 0 to disable
+FORCE_SUB_CHANNEL3 = int(os.environ.get("FORCE_SUB_CHANNEL3", "0"))#put 0 to disable
+FORCE_SUB_CHANNEL4 = int(os.environ.get("FORCE_SUB_CHANNEL4", "0"))#put 0 to disable
+
 def load_settings():
     for i in range(1, 5):
         setting = collection.find_one({"_id": f"FORCE_SUB_CHANNEL{i}"})
