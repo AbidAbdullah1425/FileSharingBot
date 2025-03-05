@@ -7,6 +7,7 @@ from bot import Bot
 
 ###-----------------------------###
 def reload_config():
+    importlib.reload(config)
     
 
 ###-----------------------------###
