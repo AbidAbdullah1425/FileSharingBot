@@ -28,7 +28,6 @@ from helper_func import (
     full_userbase, del_user
 )
 from database.database import *
-)
 from plugins.Invite_links import export_invite_links
 import importlib
 import config
