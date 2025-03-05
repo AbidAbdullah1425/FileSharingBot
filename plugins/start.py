@@ -22,11 +22,7 @@ from config import (
     FORCE_PIC, FORCE_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, 
     PROTECT_CONTENT
 )
-from helper_func import (
-    present_user, add_user, get_verify_status, update_verify_status, 
-    get_exp_time, get_shortlink, decode, get_messages, 
-    full_userbase, del_user
-)
+from helper_func import *
 from database.database import *
 from plugins.Invite_links import export_invite_links
 import importlib
