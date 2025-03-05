@@ -15,22 +15,15 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, 
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
 from bot import Bot
-from config import (
-    TIME, TUT_VID, ADMINS, TOKEN, VERIFY_EXPIRE, SHORTLINK_URL, 
-    SHORTLINK_API, START_PIC, START_MSG, FORCE_SUB_CHANNEL1, 
-    FORCE_SUB_CHANNEL2, FORCE_SUB_CHANNEL3, FORCE_SUB_CHANNEL4, 
-    FORCE_PIC, FORCE_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, 
-    PROTECT_CONTENT
-)
+import config
 from helper_func import *
 from database.database import *
 from plugins.Invite_links import export_invite_links
 import importlib
-import config
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
-FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
-TUT_VID = f"{TUT_VID}"
+FILE_AUTO_DELETE = config.TIME  # Example: 3600 seconds (1 hour)
+TUT_VID = f"{config.TUT_VID}"
 
 def reload_config():
     importlib.reload(config)
@@ -55,7 +48,7 @@ async def start_command(client: Client, message: Message):
             pass
 
     # Check if user is an admin and treat them as verified
-    if id in ADMINS:
+    if id in config.ADMINS:
         verify_status = {
             'is_verified': True,
             'verify_token': None,  # Admins don't need a token
@@ -66,8 +59,8 @@ async def start_command(client: Client, message: Message):
         verify_status = await get_verify_status(id)
 
         # If TOKEN is enabled, handle verification logic
-        if TOKEN:
-            if verify_status['is_verified'] and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
+        if config.TOKEN:
+            if verify_status['is_verified'] and config.VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
                 await update_verify_status(id, is_verified=False)
 
             if "verify_" in message.text:
@@ -78,7 +71,7 @@ async def start_command(client: Client, message: Message):
                 if verify_status["link"] == "":
                     reply_markup = None
                 return await message.reply(
-                    f"Your token has been successfully verified and is valid for {get_exp_time(VERIFY_EXPIRE)}",
+                    f"Your token has been successfully verified and is valid for {get_exp_time(config.VERIFY_EXPIRE)}",
                     reply_markup=reply_markup,
                     protect_content=False,
                     quote=True
@@ -87,19 +80,18 @@ async def start_command(client: Client, message: Message):
             if not verify_status['is_verified']:
                 token = ''.join(random.choices(rohit.ascii_letters + rohit.digits, k=10))
                 await update_verify_status(id, verify_token=token, link="")
-                link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
+                link = await get_shortlink(config.SHORTLINK_URL, config.SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
                 btn = [
                     [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)],
                     [InlineKeyboardButton('• ʜᴏᴡ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ •', url=TUT_VID)]
                 ]
                 
                 return await message.reply(
-                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one ad allows you to use the bot for {get_exp_time(VERIFY_EXPIRE)}</b>",
+                    f"<b>Your token has expired. Please refresh your token to continue.\n\nToken Timeout: {get_exp_time(config.VERIFY_EXPIRE)}\n\nWhat is the token?\n\nThis is an ads token. Passing one a[...",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
                 )
-    
 
     # Handle normal message flow
     text = message.text
@@ -141,20 +133,20 @@ async def start_command(client: Client, message: Message):
 
         codeflix_msgs = []
         for msg in messages:
-            caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
-                                             filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
+            caption = (config.CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
+                                                     filename=msg.document.file_name) if bool(config.CUSTOM_CAPTION) and bool(msg.document)
                        else ("" if not msg.caption else msg.caption.html))
 
-            reply_markup = msg.reply_markup if DISABLE_CHANNEL_BUTTON else None
+            reply_markup = msg.reply_markup if config.DISABLE_CHANNEL_BUTTON else None
 
             try:
                 copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
-                                            reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+                                            reply_markup=reply_markup, protect_content=config.PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
                 copied_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, 
-                                            reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
+                                            reply_markup=reply_markup, protect_content=config.PROTECT_CONTENT)
                 codeflix_msgs.append(copied_msg)
             except Exception as e:
                 print(f"Failed to send message: {e}")
@@ -185,12 +177,12 @@ async def start_command(client: Client, message: Message):
                 ) if reload_url else None
 
                 await notification_msg.edit(
-        f"<b><blockquote>›› Pʀᴇᴠɪᴏᴜs Mᴇssᴀɢᴇ ᴡᴀs Dᴇʟᴇᴛᴇᴅ !!\n\n"
-        f"Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɢᴇᴛ ᴛʜᴇ ғɪʟᴇs ᴀɢᴀɪɴ, ᴛʜᴇɴ ᴄʟɪᴄᴋ: "
-        f"<a href='{reload_url}'>• ɢᴇᴛ ғɪʟᴇs •</a> ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴇʟsᴇ ᴄʟᴏsᴇ ᴛʜɪs ᴍᴇssᴀɢᴇ.</blockquote></b>",
-        reply_markup=keyboard,
-        disable_web_page_preview=True
-    )
+                    f"<b><blockquote>›› Pʀᴇᴠɪᴏᴜs Mᴇssᴀɢᴇ ᴡᴀs Dᴇʟᴇᴛᴇᴅ !!\n\n"
+                    f"Iғ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɢᴇᴛ ᴛʜᴇ ғɪʟᴇs ᴀɢᴀɪɴ, ᴛʜᴇɴ ᴄʟɪᴄᴋ: "
+                    f"<a href='{reload_url}'>• ɢᴇᴛ ғɪʟᴇs •</a> ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴇʟsᴇ ᴄʟᴏsᴇ ᴛʜɪs ᴍᴇssᴀɢᴇ.</blockquote></b>",
+                    reply_markup=keyboard,
+                    disable_web_page_preview=True
+                )
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
@@ -200,8 +192,8 @@ async def start_command(client: Client, message: Message):
             ]
         )
         await message.reply_photo(
-            photo=START_PIC,
-            caption=START_MSG.format(
+            photo=config.START_PIC,
+            caption=config.START_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
                 username=None if not message.from_user.username else '@' + message.from_user.username,
@@ -211,9 +203,6 @@ async def start_command(client: Client, message: Message):
             reply_markup=reply_markup#,
             #message_effect_id=5104841245755180586  # 🔥
         )
-    
-
-
 
 #=====================================================================================##
 # Don't Remove Credit @CodeFlix_Bots, @rohit_1888
@@ -231,14 +220,14 @@ async def not_joined(client: Client, message: Message):
     # Initialize buttons list
     buttons = []
 
-    # Check and append buttons based on the FORCE_SUB_CHANNEL values
-    if FORCE_SUB_CHANNEL1 != 0:
+    # Check and append buttons based on the config.FORCE_SUB_CHANNEL values
+    if config.FORCE_SUB_CHANNEL1 != 0:
         buttons.append([InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1)])
-    if FORCE_SUB_CHANNEL2 != 0:
+    if config.FORCE_SUB_CHANNEL2 != 0:
         buttons.append([InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2)])
-    if FORCE_SUB_CHANNEL3 != 0:
+    if config.FORCE_SUB_CHANNEL3 != 0:
         buttons.append([InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3)])
-    if FORCE_SUB_CHANNEL4 != 0:
+    if config.FORCE_SUB_CHANNEL4 != 0:
         buttons.append([InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4)])
 
     # Append "Try Again" button if the command has a second argument
@@ -253,8 +242,8 @@ async def not_joined(client: Client, message: Message):
         pass  # Ignore if no second argument is present
 
     await message.reply_photo(
-        photo=FORCE_PIC,
-        caption=FORCE_MSG.format(
+        photo=config.FORCE_PIC,
+        caption=config.FORCE_MSG.format(
             first=message.from_user.first_name,
             last=message.from_user.last_name,
             username=None if not message.from_user.username else '@' + message.from_user.username,
