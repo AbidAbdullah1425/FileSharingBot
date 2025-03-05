@@ -5,7 +5,6 @@ import time
 import importlib
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
-from config import *
 import config
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
