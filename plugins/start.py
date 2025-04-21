@@ -40,6 +40,7 @@ async def cb_handler(client: Bot, query: CallbackQuery):
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
+    temp_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
     id = message.from_user.id
     if not await present_user(id):
         try:
@@ -121,7 +122,7 @@ async def start_command(client: Client, message: Message):
                 print(f"Error decoding ID: {e}")
                 return
 
-        temp_msg = await message.reply("› › ᴡᴀɪᴛ ᴀ sᴇᴄᴏɴᴅ...")
+        
         try:
             messages = await get_messages(client, ids)
         except Exception as e:
